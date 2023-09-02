@@ -25,10 +25,12 @@ public class MemberRepository {
                 .getResultList();
         // jpql 사용 sql과 문법이 비슷함 from의 대상이 table이 아닌 Entity임
     }
+    // member 모두 찾기
 
     public List<Member> findByname(String name){
         return em.createQuery("select m from Member m where m.name = :name", Member.class)
                 .setParameter("name",name)
                 .getResultList();
     }
+    // member내의 특정 이름 찾기
 }
