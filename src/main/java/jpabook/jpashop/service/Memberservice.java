@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Memberservice {
 
+    // command + shift + t 테스트 파일 만들기
     private final MemberRepository memberRepository;
 
    /*
