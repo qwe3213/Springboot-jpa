@@ -2,6 +2,7 @@ package jpabook.jpashop.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.aspectj.weaver.ast.Or;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -54,6 +55,51 @@ public class Order {
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;
         delivery.setOrder(this);
+    }
+
+    //== 생성 메서드 ==//
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems){
+                                                                     // ... 리스트형식이므로 여러개를 넘기기 위한 문법
+        Order order = new Order();
+        order.setMember(member);
+        order.setDelivery(delivery);
+        for (OrderItem orderItem : orderItems){
+            order.addOrderItem(orderItem);
+        }
+        order.setStatus(OrderStatus.ORDER);
+        // 처음상태를 ORDER로 정해둠
+        order.setOrderDate(LocalDateTime.now());
+        return order;
+    }
+
+    //== 비즈니스 로직 ==//
+    /*
+     * 주문 취소
+     */
+
+    public void cancel(){
+        if(delivery.getStatus() == DeliveryStatus.COMP){
+            // COMP는 배송완료라는 뜻
+            throw new IllegalStateException("이미 배송완료된 상품은 취소가 불가능합니다.");
+        }
+         this.setStatus(OrderStatus.CANCEL);
+        // if문 아닐시 취소해줌
+        for(OrderItem orderItem : orderItems){
+            orderItem.cancel();
+            // 개수만큼 취소시켜줌
+        }
+    }
+
+    // == 조회 로직 == //
+   /*
+    * 전체 주문 가격 조회
+    */
+    public int getTotalPrice(){
+        int totalPrice = 0;
+        for(OrderItem orderItem : orderItems){
+            totalPrice += orderItem.getTotalPrice();
+        }
+        return totalPrice;
     }
 
 }
