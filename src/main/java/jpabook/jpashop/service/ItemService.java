@@ -20,12 +20,13 @@ public class ItemService {
     }
     // Transactional이 readOnly = true일 경우에는 저장이 안되므로 다시 Transactional을 해줌
 
-    public List<Item> findItem(){
+    public List<Item> findItems(){
        return itemRepository.findAll();
     }
 
-    public Item findOne(Long itemid){
-        return itemRepository.findOne(itemid);
+    public Item findOne(Long itemId){
+        return itemRepository.findOne(itemId);
+
     }
 
 }
